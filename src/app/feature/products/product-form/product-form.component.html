@@ -1,1 +1,139 @@
-<p>product-form works!</p>
+<div class="container product-form pt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="text-center position-relative product-form__title">
+        <span class="bg-white px-2 position-relative z-1">Product form</span>
+      </h2>
+    </div>
+  </div>
+
+  <form class="product-form__wrap" [formGroup]="productForm" (ngSubmit)="onSave()">
+    <div class="mb-3">
+      <label for="productName" class="form-label">
+        {{ TITLES_FORM.NAME }}
+        <span class="text-danger">*</span>
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        id="productName"
+        formControlName="productName"
+        [ngClass]="{'has-error': (productName.touched || productName.dirty) && !productName.valid}"
+        required
+      >
+      <p class="card-text help-block"
+         *ngIf="(productName?.touched || productName?.dirty) && productName?.errors">
+        <small class="text-danger" *ngIf="productName?.hasError('required')">
+          Please enter the title of your product.
+        </small>
+        <small class="text-danger" *ngIf="productName?.hasError('minlength')">
+          Need to enter 2 or more symbols.
+        </small>
+        <small class="text-danger" *ngIf="productName?.hasError('maxlength')">
+          Need to enter 2 to 50 symbols.
+        </small>
+      </p>
+    </div>
+    <div class="mb-3">
+      <label for="expirationType" class="form-label">
+        {{ TITLES_FORM.EXPIRATION_TYPE }}
+        <span class="text-danger">*</span>
+      </label>
+      <select
+        id="expirationType"
+        class="form-select"
+        formControlName="expirationType"
+        [ngClass]="{'has-error': (expirationType.touched || expirationType.dirty) && !expirationType.valid}"
+        required
+      >
+        <option value="" selected>Select an expiration type please</option>
+        <option value="expirable">Expirable</option>
+        <option value="non_expirable">Non-expirable</option>
+      </select>
+      <p class="card-text help-block"
+         *ngIf="(expirationType?.touched || expirationType?.dirty) && expirationType?.errors">
+        <small class="text-danger" *ngIf="expirationType.hasError('required')">
+          Select an expiration type please.
+        </small>
+      </p>
+    </div>
+
+    <div class="mb-3 mt-4">
+      <div class="row bg-primary-subtle py-3 mb-2 gx-2 fw-bold">
+        <div class="col-5 px-3">Field</div>
+        <div class="col-5">Value</div>
+        <div class="col-1 text-center">Date</div>
+        <div class="col-1 text-center">Del</div>
+      </div>
+
+      <div formArrayName="fields">
+      <div *ngFor="let field of fields.controls; let i = index; trackBy: trackByFn" [formGroupName]="i" class="row align-items-center mb-2 gx-2">
+        <div class="col-5">
+          <input type="text" class="form-control" id="field" formControlName="name" placeholder="*" required>
+        </div>
+        <div class="col-5">
+          <input *ngIf="!field.get('is_date')?.value" type="text" class="form-control" formControlName="value" placeholder="*" required>
+          <input *ngIf="field.get('is_date')?.value" type="date" class="form-control" formControlName="value" required>
+        </div>
+        <div class="col-1 d-flex justify-content-center">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="dateCheck"
+            formControlName="is_date"
+          >
+        </div>
+        <div class="col-1 d-flex justify-content-center">
+          <button type="button" class="btn delete-btn btn-sm" (click)="removeField(i)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="d-grid gap-2 mt-3 d-md-flex justify-content-md-end">
+        <button class="btn btn-primary" type="button" (click)="addField()">Add</button>
+      </div>
+    </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="manufactureDate" class="form-label">
+        {{ TITLES_FORM.MANUFACTURE_DATE }}
+        <span class="text-danger">*</span>
+      </label>
+      <input type="date" id="manufactureDate" class="form-control product-form__data" formControlName="manufactureDate" required>
+    </div>
+
+    <div
+      *ngIf="showExpirationDate"
+      class="mb-3"
+    >
+      <label for="expirationDate" class="form-label">
+        {{ TITLES_FORM.EXPIRATION_DATE }}
+        <span class="text-danger">*</span>
+      </label>
+      <input type="date" id="expirationDate" class="form-control product-form__data" formControlName="expirationDate" required>
+      <p class="card-text help-block"
+         *ngIf="(expirationDate?.touched || expirationDate?.dirty) && productForm.hasError('dateInvalid')">
+        <small class="text-danger">
+          Expiration date cannot be earlier than manufacture date.
+        </small>
+      </p>
+    </div>
+
+    <div class="mb-3">
+      <label for="comment" class="form-label">
+        {{ TITLES_FORM.COMMENT }}
+      </label>
+      <textarea class="form-control" id="comment" rows="3" formControlName="comment"></textarea>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button [routerLink]="['']" class="btn btn-primary me-md-2" type="button">
+        Close
+      </button>
+      <button [disabled]="!productForm.valid" class="btn btn-primary" type="submit">
+        {{ isEditForm ? 'Edit and save' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>

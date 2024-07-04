@@ -1,1 +1,60 @@
-<p>products works!</p>
+<div class="container products-list">
+  <div class="mb-3 mt-4">
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-2 pb-4">
+      <button routerLink="/products/add" class="btn btn-primary text-light" type="button">
+        Add product
+      </button>
+    </div>
+
+    <div class="row bg-primary-subtle py-3 mb-2 fw-bold">
+      <div class="col-2 px-3">Id</div>
+      <div class="col-2">Name</div>
+      <div class="col-2">Manufacture date</div>
+      <div class="col-2">Expiration date</div>
+      <div class="col-2">Comment</div>
+      <div class="col-2">Actions</div>
+    </div>
+
+    <div *ngFor="let product of products" class="row align-items-center mb-2 gx-2">
+      <div class="col-2">
+        <p class="text-start mx-3">{{ product.id }}</p>
+      </div>
+
+      <div class="col-2">
+        <p class="text-start col-1">{{ product.name }}</p>
+      </div>
+
+      <div class="col-2">
+        <p class="text-start">{{ formatField(product.manufacture_date) }}</p>
+      </div>
+
+      <div class="col-2">
+        <p class="text-start">{{ formatField(product.expiration_date) }}</p>
+      </div>
+
+      <div class="col-2">
+        <p class="text-start">{{ formatField(product.comment) }}</p>
+      </div>
+
+      <div class="col-2">
+        <button
+          [routerLink]="['/products', product.id]"
+          type="button"
+          class="btn edit-btn mx-1 btn-sm mx"
+        >
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+
+        <button
+          (click)="deleteProduct(product.id)"
+          type="button"
+          class="btn delete-btn btn-sm"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
