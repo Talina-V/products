@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Product} from "./products.model";
 import {Subscription} from "rxjs";
 import {ProductsService} from "../../../core/services/products.service";
