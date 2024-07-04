@@ -7,13 +7,14 @@ import {ProductsService} from "../../../core/services/products.service";
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   private subscription: Subscription = new Subscription();
 
-  constructor(private productService: ProductsService) {
+  constructor(
+    private productService: ProductsService,
+  ) {
   }
 
   ngOnInit(): void {

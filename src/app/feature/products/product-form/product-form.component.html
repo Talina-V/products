@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12">
       <h2 class="text-center position-relative product-form__title">
-        <span class="bg-white px-2 position-relative z-1">Product form</span>
+        <span class="bg-white px-2 position-relative z-1">{{ title }}</span>
       </h2>
     </div>
   </div>
@@ -47,8 +47,8 @@
         required
       >
         <option value="" selected>Select an expiration type please</option>
-        <option value="expirable">Expirable</option>
-        <option value="non_expirable">Non-expirable</option>
+        <option value="expirable">expirable</option>
+        <option value="non_expirable">non expirable</option>
       </select>
       <p class="card-text help-block"
          *ngIf="(expirationType?.touched || expirationType?.dirty) && expirationType?.errors">

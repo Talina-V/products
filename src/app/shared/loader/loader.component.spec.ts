@@ -6,10 +6,14 @@ describe('LoaderComponent', () => {
   let component: LoaderComponent;
   let fixture: ComponentFixture<LoaderComponent>;
 
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ LoaderComponent ]
+    })
+      .compileComponents();
+  });
+
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [LoaderComponent]
-    });
     fixture = TestBed.createComponent(LoaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -17,5 +21,10 @@ describe('LoaderComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have a span element with class preloader', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('span.preloader')).not.toBeNull();
   });
 });

@@ -13,6 +13,7 @@ import {debounceTime, distinctUntilChanged} from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductFormComponent implements OnInit {
+  title = 'Product form';
   productForm!: FormGroup;
   productId!: number;
   isEditForm: boolean = false;
@@ -23,7 +24,7 @@ export class ProductFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productsService: ProductsService,
-    private router: Router,
+    public router: Router,
     private activateRoute: ActivatedRoute,
   ) {
   }
@@ -53,11 +54,12 @@ export class ProductFormComponent implements OnInit {
         '',
         Validators.required
       ],
-      expirationDate: [
-        ''
-      ],
+      expirationDate: [''],
       comment: [''],
-      fields: this.fb.array([], Validators.required)
+      fields: this.fb.array(
+        [],
+        Validators.required
+      )
     }, {
       validator: this.dateComparisonValidator
     });
