@@ -5,6 +5,7 @@ import {ProductsService} from "../../../core/services/products.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Product} from "../products/products.model";
 import {debounceTime, distinctUntilChanged} from "rxjs";
+import {CustomValidators} from "../../../shared/validators/custom.validators";
 
 @Component({
   selector: 'app-product-form',
@@ -38,52 +39,25 @@ export class ProductFormComponent implements OnInit {
 
   buildForm(): void {
     this.productForm = this.fb.group({
-      productName: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(50)
-        ]
-      ],
-      expirationType: [
-        '',
-        Validators.required
-      ],
-      manufactureDate: [
-        '',
-        Validators.required
-      ],
-      expirationDate: [''],
+      productName: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        CustomValidators.isValidName
+      ]],
+      expirationType: ['', Validators.required],
+      manufactureDate: ['', [Validators.required, CustomValidators.dateFormat]],
+      expirationDate: ['', [Validators.required, CustomValidators.dateFormat]],
       comment: [''],
-      fields: this.fb.array(
-        [],
-        Validators.required
-      )
+      fields: this.fb.array([])
     }, {
-      validator: this.dateComparisonValidator
+      validators: CustomValidators.dateComparisonValidator
     });
 
     this.productForm.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged()
     ).subscribe();
-  }
-
-  dateComparisonValidator: ValidatorFn = (control: AbstractControl): { [key: string]: boolean } | null => {
-    const manufactureDate = control.get('manufactureDate');
-    const expirationDate = control.get('expirationDate');
-
-    if (manufactureDate && expirationDate && manufactureDate.value && expirationDate.value) {
-      const mDate = new Date(manufactureDate.value);
-      const eDate = new Date(expirationDate.value);
-
-      if (eDate < mDate) {
-        return {'dateInvalid': true};
-      }
-    }
-
-    return null;
   }
 
   setupExpirationTypeListener(): void {
@@ -157,13 +131,19 @@ export class ProductFormComponent implements OnInit {
 
     const product: Product = {
       id: this.isEditForm ? this.productId : 0,
-      name: this.productForm.value.productName,
+      name: this.productForm.value.productName.trim(),
       expiration_type: this.productForm.value.expirationType === 'expirable' ? 'expirable' : 'non_expirable',
       category_id: this.defaultCategoryId,
-      fields: this.productForm.value.fields,
+      fields: this.productForm.value.fields.map((field: any) => ({
+        ...field,
+        name: field.name.trim(),
+        value: field.value.trim()
+      })),
       manufacture_date: this.formatDate(this.productForm.value.manufactureDate),
-      expiration_date: this.productForm.value.expirationDate ? this.formatDate(this.productForm.value.expirationDate) : null,
-      comment: this.productForm.value.comment,
+      expiration_date: this.productForm.value.expirationDate ? this.formatDate(
+        this.productForm.value.expirationDate
+      ) : null,
+      comment: this.productForm.value.comment.trim(),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };

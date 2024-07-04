@@ -6,3 +6,7 @@ export enum TITLES_FORM {
   COMMENT = 'Comment',
 }
 
+export const REGEXP_PATTERNS = {
+  name: /^[a-zA-Z|'|-]{2,50}$/,
+  dateFormat: /^\d{4}\-\d{2}\-\d{2}$/,
+};
